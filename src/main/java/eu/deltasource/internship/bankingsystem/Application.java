@@ -3,37 +3,45 @@ package eu.deltasource.internship.bankingsystem;
 public class Application {
 
     public static void main(String[] args) {
-        Customer tomSmith = new Customer("Tom", "Smith","01/10/1991");
-        Customer jerrySmith = new Customer("Jerry", "Smith","11/10/1991");
-        System.out.println(tomSmith);
 
-        BankInstitution dsk = new BankInstitution("DSK","Vasil Aprilov 22");
-        BankInstitution bbb = new BankInstitution("BBB","Vasil Aprilov 23");
-        dsk.addNewCustomer(tomSmith);
-        bbb.addNewCustomer(jerrySmith);
+        CustomerService lilySmith = new CustomerService();
+        CustomerService samSmith = new CustomerService();
+        samSmith.createNewCustomer("Sam", "Smith", 18,9,2001);
+        lilySmith.createNewCustomer("Lily", "Smith", 15,6,1993);
 
-        System.out.println(dsk);
-        dsk.addFee("Deposit fee", 0.80);
-        dsk.addFee("Withdraw fee",2.60);
-        dsk.addFee("BGN exchange rate: ",2.60);
-        System.out.println(dsk);
+        System.out.println(lilySmith.printCustomer());
+        System.out.println(samSmith.printCustomer());
 
-        BankAccount tomBankAccount = new BankAccount(dsk, tomSmith, "1234567890123456789012", Currency.BGN, 12.50,AccountType.CURRENT_ACCOUNT);
-        BankAccount jerrySmithBankAccount = new BankAccount(bbb, jerrySmith,"1234567890123456789013", Currency.BGN, 200.31, AccountType.SAVINGS_ACCOUNT );
-        System.out.println(tomBankAccount);
+        BankInstitutionService bnp = new BankInstitutionService();
+        bnp.createBankInstitution("BNP", "Vasil Aprilov №15");
+        bnp.addNewCustomer(lilySmith.getCustomer());
+        bnp.addFee(Fee.BETWEEN_TWO_BANKS, 0.80);
+        bnp.addFee(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS, 2.60);
+        bnp.addExchangeRate(ExchangeRate.BGN_EUR, 0.556951);
+        bnp.addExchangeRate(ExchangeRate.EUR_BGN, 0.511292);
 
-        Transaction transaction = new Transaction("1234567890123456789012", "1234567890123456789013", dsk, bbb, 15.60, Currency.USD, Currency.BGN, 0.5 );
-        System.out.println(transaction);
+        BankInstitutionService ddd = new BankInstitutionService();
+        ddd.createBankInstitution("DDD", "bul. Ruski");
+        ddd.addNewCustomer(samSmith.getCustomer());
+        ddd.addFee(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS, 1.55);
+        ddd.addFee(Fee.BETWEEN_TWO_BANKS, 2.10);
+        ddd.addExchangeRate(ExchangeRate.BGN_EUR,1.6895);
+        ddd.addExchangeRate(ExchangeRate.EUR_BGN,0.99898);
 
-        tomBankAccount.trasfer(tomBankAccount, jerrySmithBankAccount,10.50);
-        System.out.println(tomBankAccount);
-        System.out.println(jerrySmithBankAccount);
+        System.out.println(bnp.printBankInstitution());
 
-        jerrySmithBankAccount.withdraw(jerrySmithBankAccount, 100);
-        System.out.println(jerrySmithBankAccount);
+        BankAccountService lilyAccount = new BankAccountService();
+        BankAccountService samAccount = new BankAccountService();
+        lilyAccount.createBankAccount(bnp.getBankInstitution(), lilySmith.getCustomer(), "1234567890123456789012", Currency.BGN, 12.50, AccountType.CURRENT_ACCOUNT);
+        samAccount.createBankAccount(bnp.getBankInstitution(), samSmith.getCustomer(), "1234567890123456789012", Currency.EUR, 12.50, AccountType.CURRENT_ACCOUNT);
 
+        lilyAccount.deposit(100);
+        lilyAccount.withdraw(50);
+        System.out.println(lilyAccount.printBankAccount());
+        lilyAccount.transfer(lilyAccount.getBankAccount(), samAccount.getBankAccount(),10);
 
-
+        System.out.println("Lily's account: " + lilyAccount.printBankAccount());
+        System.out.println("Sam's account: " + samAccount.printBankAccount());
     }
 
 }
