@@ -8,15 +8,17 @@ public class CustomerService {
 
     public boolean createNewCustomer(String fName, String lName, int day, int month, int year){
         customer.setId(UUID.randomUUID().toString());
-        if(!fName.equals("") && !lName.equals("")){
-            customer.setfName(fName);
-            customer.setlName(lName);
+        if(fName.equals("") || lName.equals("")){
+            return false;
         }
-        if(day > 0 && day <= 31 && month > 1 && month <= 12 && year > 1920 && year <= 2013){
-            LocalDate birthdate = LocalDate.of(year, month, day);
-            customer.setBirthdate(birthdate);
+        if((day < 1 || day >= 31) || (month < 1 || month >= 12) || (year < 1920 || year >= 2013)){
+            return false;
         }
-        return false;
+        customer.setfName(fName);
+        customer.setlName(lName);
+        LocalDate birthdate = LocalDate.of(year, month, day);
+        customer.setBirthdate(birthdate);
+        return true;
     }
 
     public CustomerModel getCustomer(){

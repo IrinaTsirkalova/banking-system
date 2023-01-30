@@ -1,9 +1,12 @@
 package eu.deltasource.internship.bankingsystem;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class BankAccountService {
-    private BankAccountModel bankAccount = new BankAccountModel();
+    private final BankAccountModel bankAccount = new BankAccountModel();
 
     public BankAccountModel getBankAccount(){
         return bankAccount;
@@ -26,6 +29,12 @@ public class BankAccountService {
         transaction.createWithdrawOrDepositTransaction(bankAccount.getIban(),bankAccount.getBankInstitution(),
                 amount, bankAccount.getCurrency(), transactionType);
         bankAccount.getTransactionList().add(transaction.getTransaction());
+    }
+
+    public void createTransferTransaction(BankAccountModel sourceAccount, BankAccountModel targetAccount, double amount, double exchangeRate, double additionalFee, double exchangeValue){
+        TransactionService transaction = new TransactionService();
+        transaction.createTransferTransaction(sourceAccount.getIban(), targetAccount.getIban(), sourceAccount.getBankInstitution(), targetAccount.getBankInstitution(), amount, sourceAccount.getCurrency(), targetAccount.getCurrency(),exchangeRate,"Transfer");
+        sourceAccount.getTransactionList().add(transaction.getTransaction());
     }
 
     public boolean withdraw( double amount){
@@ -60,27 +69,48 @@ public class BankAccountService {
         return transferredAmount * exchangeRate;
     }
 
+    public double calculateAdditionalFees(BankAccountModel sourceAccount, BankAccountModel targetAccount){
+        double additionalFee = 0.0;
+        if(!sourceAccount.getBankInstitution().equals(targetAccount.getBankInstitution())){
+            additionalFee += sourceAccount.getBankInstitution().getFeeList().get(Fee.BETWEEN_TWO_BANKS);
+        }
+        additionalFee += sourceAccount.getBankInstitution().getFeeList().get(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS);
+        return additionalFee;
+    }
+
     public boolean transfer(BankAccountModel sourceAccount, BankAccountModel targetAccount, double amount){
-        if(bankAccount.getType() == AccountType.CURRENT_ACCOUNT && targetAccount.getType() == AccountType.CURRENT_ACCOUNT){
-            double sourceAccountAvailableAmount = bankAccount.getAvailableAmount();
-            double targetAccountAvailableAmount = targetAccount.getAvailableAmount();
-            double additionalFee =0.0;
-            if(sourceAccountAvailableAmount > amount){
-                if(!bankAccount.getBankInstitution().equals(targetAccount.getBankInstitution())){
-                    additionalFee = sourceAccount.getBankInstitution().getFeeList().get(Fee.BETWEEN_TWO_BANKS);
-                }
-                additionalFee = sourceAccount.getBankInstitution().getFeeList().get(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS);
-                double exchangeRate = getExchangeRate(sourceAccount,targetAccount);
-                double exchangeValue = calculateExchangeValue(amount, exchangeRate);
-                TransactionService transaction = new TransactionService();
-                transaction.createTransferTransaction(bankAccount.getIban(), targetAccount.getIban(), bankAccount.getBankInstitution(), targetAccount.getBankInstitution(), amount, bankAccount.getCurrency(), targetAccount.getCurrency(),exchangeRate,"Transfer");
-                sourceAccount.setAvailableAmount(sourceAccountAvailableAmount - amount - additionalFee);
-                targetAccount.setAvailableAmount(targetAccountAvailableAmount + exchangeValue);
-                sourceAccount.getTransactionList().add(transaction.getTransaction());
-                return true;
+        if(sourceAccount.getType() == AccountType.CURRENT_ACCOUNT && targetAccount.getType() == AccountType.CURRENT_ACCOUNT && sourceAccount.getAvailableAmount() > amount){
+            double additionalFee = calculateAdditionalFees(sourceAccount, targetAccount);
+            double exchangeRate = 0.0;
+            double exchangeValue = 0.0;
+            if(!sourceAccount.getCurrency().equals(targetAccount.getCurrency())){
+                exchangeRate = getExchangeRate(sourceAccount,targetAccount);
+                exchangeValue = calculateExchangeValue(amount, exchangeRate);
             }
+            createTransferTransaction(sourceAccount, targetAccount, amount, exchangeRate, additionalFee, exchangeValue);
+            sourceAccount.setAvailableAmount(sourceAccount.getAvailableAmount() - amount - additionalFee);
+            targetAccount.setAvailableAmount(targetAccount.getAvailableAmount() + exchangeValue);
+            return true;
+
         }
         return false;
+    }
+
+    public String printBankStatementForAPeriod(int fromDay, int fromMonth, int fromYear, int toDay, int toMonth, int toYear){
+        LocalDate fromDate = LocalDate.of(fromYear, fromMonth, fromDay);
+        LocalDate toDate = LocalDate.of(toYear, toMonth,toDay);
+        List<TransactionModel> transactionsForRange = new ArrayList<>();
+        if(!(bankAccount.getTransactionList() == null)){
+            for(TransactionModel transaction : bankAccount.getTransactionList()){
+                LocalDate transLocalDate = transaction.getTimestamp().toLocalDate();
+                if((fromDate.isEqual(transaction.getTimestamp().toLocalDate()) || fromDate.isBefore(transaction.getTimestamp().toLocalDate()))
+                        && (toDate.isEqual(transaction.getTimestamp().toLocalDate()) || toDate.isAfter(transaction.getTimestamp().toLocalDate()))){
+                    transactionsForRange.add(transaction);
+                }
+            }
+        }
+        return transactionsForRange.toString();
+
     }
 
     public String printBankAccount(){

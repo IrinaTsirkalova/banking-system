@@ -42,6 +42,9 @@ public class Application {
 
         System.out.println("Lily's account: " + lilyAccount.printBankAccount());
         System.out.println("Sam's account: " + samAccount.printBankAccount());
+
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println(lilyAccount.printBankStatementForAPeriod(15,01,2023,31,1,2023));
     }
 
 }
