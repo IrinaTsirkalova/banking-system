@@ -69,13 +69,14 @@ public class BankAccountService {
                 if(!bankAccount.getBankInstitution().equals(targetAccount.getBankInstitution())){
                     additionalFee = sourceAccount.getBankInstitution().getFeeList().get(Fee.BETWEEN_TWO_BANKS);
                 }
+                additionalFee = sourceAccount.getBankInstitution().getFeeList().get(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS);
                 double exchangeRate = getExchangeRate(sourceAccount,targetAccount);
                 double exchangeValue = calculateExchangeValue(amount, exchangeRate);
                 TransactionService transaction = new TransactionService();
                 transaction.createTransferTransaction(bankAccount.getIban(), targetAccount.getIban(), bankAccount.getBankInstitution(), targetAccount.getBankInstitution(), amount, bankAccount.getCurrency(), targetAccount.getCurrency(),exchangeRate,"Transfer");
-                bankAccount.setAvailableAmount(sourceAccountAvailableAmount - amount - additionalFee);
+                sourceAccount.setAvailableAmount(sourceAccountAvailableAmount - amount - additionalFee);
                 targetAccount.setAvailableAmount(targetAccountAvailableAmount + exchangeValue);
-                bankAccount.getTransactionList().add(transaction.getTransaction());
+                sourceAccount.getTransactionList().add(transaction.getTransaction());
                 return true;
             }
         }
