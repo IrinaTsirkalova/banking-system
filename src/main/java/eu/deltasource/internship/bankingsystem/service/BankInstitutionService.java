@@ -1,19 +1,19 @@
-package eu.deltasource.internship.bankingsystem;
+package eu.deltasource.internship.bankingsystem.service;
+
+import eu.deltasource.internship.bankingsystem.enums.ExchangeRate;
+import eu.deltasource.internship.bankingsystem.enums.Fee;
+import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
+import eu.deltasource.internship.bankingsystem.model.BankInstitutionModel;
+import eu.deltasource.internship.bankingsystem.model.CustomerModel;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BankInstitutionService {
     private final BankInstitutionModel bankInstitution = new BankInstitutionModel();
 
-    public boolean createBankInstitution(String name, String address){
+    public boolean createBankInstitution(String name, String address) throws IncorrectNameException, BlankInputException {
         bankInstitution.setId(UUID.randomUUID().toString());
-        Pattern nonLettersPattern = Pattern.compile("[^a-zA-Z]");
-        Matcher nonLettersNameMatcher = nonLettersPattern.matcher(name);
-        if(name.equals("") || nonLettersNameMatcher.find() || address.equals("")){
-            return false;
-        }
         bankInstitution.setName(name);
         bankInstitution.setAddress(address);
         bankInstitution.setNumberOfCustomers(0);

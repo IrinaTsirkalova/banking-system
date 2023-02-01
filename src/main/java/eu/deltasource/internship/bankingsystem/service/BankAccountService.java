@@ -1,4 +1,13 @@
-package eu.deltasource.internship.bankingsystem;
+package eu.deltasource.internship.bankingsystem.service;
+import eu.deltasource.internship.bankingsystem.enums.AccountType;
+import eu.deltasource.internship.bankingsystem.enums.Currency;
+import eu.deltasource.internship.bankingsystem.enums.ExchangeRate;
+import eu.deltasource.internship.bankingsystem.enums.Fee;
+import eu.deltasource.internship.bankingsystem.model.BankAccountModel;
+import eu.deltasource.internship.bankingsystem.model.BankInstitutionModel;
+import eu.deltasource.internship.bankingsystem.model.CustomerModel;
+import eu.deltasource.internship.bankingsystem.model.TransactionModel;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class BankAccountService {
+
     private final BankAccountModel bankAccount = new BankAccountModel();
 
     public BankAccountModel getBankAccount(){
@@ -40,7 +50,7 @@ public class BankAccountService {
     public boolean withdraw( double amount){
         double sourceAccountAvailableAmount = bankAccount.getAvailableAmount();
         if(sourceAccountAvailableAmount > amount){
-            bankAccount.setAvailableAmount(sourceAccountAvailableAmount-amount);
+            bankAccount.setAvailableAmount(sourceAccountAvailableAmount - amount);
             createWithdrawOrDepositTransaction(bankAccount, amount,"Withdraw");
             return true;
         }

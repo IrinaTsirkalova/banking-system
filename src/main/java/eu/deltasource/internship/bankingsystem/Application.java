@@ -1,13 +1,27 @@
 package eu.deltasource.internship.bankingsystem;
 
+import eu.deltasource.internship.bankingsystem.enums.AccountType;
+import eu.deltasource.internship.bankingsystem.enums.Currency;
+import eu.deltasource.internship.bankingsystem.enums.ExchangeRate;
+import eu.deltasource.internship.bankingsystem.enums.Fee;
+import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectDateInputException;
+import eu.deltasource.internship.bankingsystem.service.BankAccountService;
+import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
+import eu.deltasource.internship.bankingsystem.service.CustomerService;
+
+/**
+ * Represents the program starting point
+ */
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BlankInputException, IncorrectNameException, IncorrectDateInputException {
 
         CustomerService lilySmith = new CustomerService();
         CustomerService samSmith = new CustomerService();
-        samSmith.createNewCustomer("Sam", "Smith", 18,9,2001);
-        lilySmith.createNewCustomer("Lily", "Smith", 15,6,1993);
+        samSmith.createNewCustomer("Sam", "Smith", 18, 9, 2001);
+        lilySmith.createNewCustomer("Lily",  "Smith", 15, 6, 1993);
 
         System.out.println(lilySmith.printCustomer());
         System.out.println(samSmith.printCustomer());
@@ -25,8 +39,8 @@ public class Application {
         ddd.addNewCustomer(samSmith.getCustomer());
         ddd.addFee(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS, 1.55);
         ddd.addFee(Fee.BETWEEN_TWO_BANKS, 2.10);
-        ddd.addExchangeRate(ExchangeRate.BGN_EUR,1.6895);
-        ddd.addExchangeRate(ExchangeRate.EUR_BGN,0.99898);
+        ddd.addExchangeRate(ExchangeRate.BGN_EUR, 1.6895);
+        ddd.addExchangeRate(ExchangeRate.EUR_BGN, 0.99898);
 
         System.out.println(bnp.printBankInstitution());
 
@@ -38,13 +52,13 @@ public class Application {
         lilyAccount.deposit(100);
         lilyAccount.withdraw(50);
         System.out.println(lilyAccount.printBankAccount());
-        lilyAccount.transfer(lilyAccount.getBankAccount(), samAccount.getBankAccount(),10);
+        lilyAccount.transfer(lilyAccount.getBankAccount(), samAccount.getBankAccount(), 10);
 
         System.out.println("Lily's account: " + lilyAccount.printBankAccount());
         System.out.println("Sam's account: " + samAccount.printBankAccount());
 
         System.out.println("----------------------------------------------------------------------------------------------------");
-        System.out.println(lilyAccount.printBankStatementForAPeriod(15,01,2023,31,1,2023));
+        System.out.println(lilyAccount.printBankStatementForAPeriod(15, 01, 2023, 31, 1, 2023));
     }
 
 }

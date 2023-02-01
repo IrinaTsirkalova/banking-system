@@ -1,9 +1,17 @@
-package eu.deltasource.internship.bankingsystem;
+package eu.deltasource.internship.bankingsystem.model;
+
+import eu.deltasource.internship.bankingsystem.enums.AccountType;
+import eu.deltasource.internship.bankingsystem.enums.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Models bank account that has id, bank institution, customer, iban, currency
+ * available amount
+ */
 public class BankAccountModel {
+
     private String id;
     private BankInstitutionModel bankInstitution;
     private CustomerModel customer;

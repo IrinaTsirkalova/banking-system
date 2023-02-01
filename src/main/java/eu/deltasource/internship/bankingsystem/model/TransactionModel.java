@@ -1,19 +1,25 @@
-package eu.deltasource.internship.bankingsystem;
+package eu.deltasource.internship.bankingsystem.model;
+
+import eu.deltasource.internship.bankingsystem.enums.Currency;
 
 import java.time.LocalDateTime;
 
+/**
+ * Models transaction that has id, type, source and target iban, bank, currency, transferred amount, exchange rate and timestamp
+ */
 public class TransactionModel {
+
     private String id;
+    private String transactionType;
     private String sourceIban;
     private String targetIban;
     private BankInstitutionModel sourceBank;
     private BankInstitutionModel targetBank;
-    private double transferredAmount;
     private Currency sourceCurrency;
     private Currency targetCurrency;
+    private double transferredAmount;
     private double exchangeRate;
     private LocalDateTime timestamp;
-    private String transactionType;
 
     public void setId(String id) {
         this.id = id;

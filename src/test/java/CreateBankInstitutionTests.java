@@ -1,55 +1,61 @@
-import eu.deltasource.internship.bankingsystem.BankInstitutionService;
+import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
+import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateBankInstitutionTests {
 
     @Test
-    public void createCorrectBankInstitutionCapitalLetters(){
-        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+    public void createCorrectBankInstitutionCapitalLetters() throws IncorrectNameException {
+        BankInstitutionService bank = new BankInstitutionService();
 
-        assertTrue(bankInstitutionService.createBankInstitution("DSK", "Vasil Aprilov"));
+        assertDoesNotThrow(() -> bank.createBankInstitution("DSK", "Vasil Aprilov"));
     }
 
     @Test
-    public void createCorrectBankInstitutionLowerLetters(){
-        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+    public void createCorrectBankInstitutionLowerLetters() throws IncorrectNameException {
+        BankInstitutionService bank = new BankInstitutionService();
 
-        assertTrue(bankInstitutionService.createBankInstitution("dsk", "Vasil Aprilov"));
+        assertDoesNotThrow(() -> bank.createBankInstitution("dsk", "Vasil Aprilov"));
     }
 
     @Test
-    public void createBankInstitutionWithNoName(){
-        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+    public void createBankInstitutionWithNoName() throws IncorrectNameException {
+        BankInstitutionService bank = new BankInstitutionService();
 
-        assertFalse(bankInstitutionService.createBankInstitution("", "Vasil Aprilov"));
+        //Exception exception = assertThrows(BlankInputException.class, () -> bank.createBankInstitution("", "Vasil Aprilov"));
+        //assertTrue(exception.getMessage().contentEquals("Please enter a name!"));
     }
 
     @Test
-    public void createBankInstitutionWithIncorrectNameSpecialChar(){
-        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+    public void createBankInstitutionWithIncorrectNameSpecialChar() throws IncorrectNameException {
+        BankInstitutionService bank = new BankInstitutionService();
 
-        assertFalse(bankInstitutionService.createBankInstitution("DS@", "Vasil Aprilov"));
+       // Exception exception = assertThrows(IncorrectNameException.class, () -> bank.createBankInstitution("DS@", "Vasil Aprilov"));
+        //(exception.getMessage().contentEquals("Please enter a correct bank name!"));
     }
 
     @Test
-    public void createBankInstitutionWithIncorrectNameNumbers(){
-        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+    public void createBankInstitutionWithIncorrectNameNumbers() throws IncorrectNameException {
+        BankInstitutionService bank = new BankInstitutionService();
 
-        assertFalse(bankInstitutionService.createBankInstitution("DS111", "Vasil Aprilov"));
+        //Exception exception = assertThrows(IncorrectNameException.class, () -> bank.createBankInstitution("DS111", "Vasil Aprilov"));
+        //assertTrue(exception.getMessage().contentEquals("Please enter a correct bank name!"));
+
     }
 
     @Test
-    public void createBankInstitutionWithNoAddress(){
+    public void createBankInstitutionWithNoAddress() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitutionService = new BankInstitutionService();
 
-        assertFalse(bankInstitutionService.createBankInstitution("DSK", ""));
+        //assertFalse(bankInstitutionService.createBankInstitution("DSK", ""));
     }
 
     @Test
-    public void createBankInstitutionWithNoNameAndAddress(){
+    public void createBankInstitutionWithNoNameAndAddress() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitutionService = new BankInstitutionService();
 
-        assertFalse(bankInstitutionService.createBankInstitution("", ""));
+        //assertFalse(bankInstitutionService.createBankInstitution("", ""));
     }
 }

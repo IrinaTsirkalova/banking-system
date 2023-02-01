@@ -1,4 +1,8 @@
-package eu.deltasource.internship.bankingsystem;
+package eu.deltasource.internship.bankingsystem.service;
+import eu.deltasource.internship.bankingsystem.enums.Currency;
+import eu.deltasource.internship.bankingsystem.model.BankInstitutionModel;
+import eu.deltasource.internship.bankingsystem.model.TransactionModel;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 

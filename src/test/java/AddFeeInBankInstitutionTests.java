@@ -1,15 +1,15 @@
-import eu.deltasource.internship.bankingsystem.BankInstitutionService;
-import eu.deltasource.internship.bankingsystem.Fee;
+import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
+import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
+import eu.deltasource.internship.bankingsystem.enums.Fee;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Map;
 
 public class AddFeeInBankInstitutionTests {
 
-    //bankInstitution.addFee(null, 0.80);
-    //bankInstitution.addFee(null, 0.0);
     @Test
-    public void addSuccessfullyFeeInBankInstitution(){
+    public void addSuccessfullyFeeInBankInstitution() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitution = new BankInstitutionService();
         bankInstitution.createBankInstitution("DSK", "Vasil Aprilov");
         Fee fee = Fee.BETWEEN_TWO_BANKS;
@@ -29,7 +29,7 @@ public class AddFeeInBankInstitutionTests {
     }
 
     @Test
-    public void addFeeWithNoFeeName(){
+    public void addFeeWithNoFeeName() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitution = new BankInstitutionService();
         bankInstitution.createBankInstitution("DSK", "Vasil Aprilov");
 
@@ -39,7 +39,7 @@ public class AddFeeInBankInstitutionTests {
     }
 
     @Test
-    public void addFeeWithNoFeeValue(){
+    public void addFeeWithNoFeeValue() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitution = new BankInstitutionService();
         bankInstitution.createBankInstitution("DSK", "Vasil Aprilov");
 
@@ -49,7 +49,7 @@ public class AddFeeInBankInstitutionTests {
     }
 
     @Test
-    public void addFeeWithNoFeeNameAndValue(){
+    public void addFeeWithNoFeeNameAndValue() throws IncorrectNameException, BlankInputException {
         BankInstitutionService bankInstitution = new BankInstitutionService();
         bankInstitution.createBankInstitution("DSK", "Vasil Aprilov");
 

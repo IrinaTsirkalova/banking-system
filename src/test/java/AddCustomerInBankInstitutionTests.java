@@ -1,6 +1,9 @@
-import eu.deltasource.internship.bankingsystem.BankInstitutionService;
-import eu.deltasource.internship.bankingsystem.CustomerModel;
-import eu.deltasource.internship.bankingsystem.CustomerService;
+import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
+import eu.deltasource.internship.bankingsystem.exception.IncorrectDateInputException;
+import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
+import eu.deltasource.internship.bankingsystem.model.CustomerModel;
+import eu.deltasource.internship.bankingsystem.service.CustomerService;
 import org.junit.Test;
 import java.util.List;
 
@@ -9,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AddCustomerInBankInstitutionTests {
 
     @Test
-    public void increaseNumberOfCustomersAfterAddingNew(){
+    public void increaseNumberOfCustomersAfterAddingNew() throws BlankInputException, IncorrectNameException, IncorrectDateInputException {
         CustomerService customer = new CustomerService();
         customer.createNewCustomer("Tom","Smith",4,11,1988);
         BankInstitutionService bankInstitution = new BankInstitutionService();
@@ -24,7 +27,7 @@ public class AddCustomerInBankInstitutionTests {
     }
 
     @Test
-    public void addSuccessfullyNewCustomerInBankInstitution(){
+    public void addSuccessfullyNewCustomerInBankInstitution() throws BlankInputException, IncorrectNameException, IncorrectDateInputException {
         CustomerService customer = new CustomerService();
         customer.createNewCustomer("Tom","Smith",4,11,1988);
         BankInstitutionService bankInstitution = new BankInstitutionService();
