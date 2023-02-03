@@ -1,45 +1,146 @@
 package eu.deltasource.internship.bankingsystem.service;
-import eu.deltasource.internship.bankingsystem.enums.Currency;
-import eu.deltasource.internship.bankingsystem.model.BankInstitutionModel;
-import eu.deltasource.internship.bankingsystem.model.TransactionModel;
+
+import eu.deltasource.internship.bankingsystem.enums.*;
+import eu.deltasource.internship.bankingsystem.exception.InvalidValueInputException;
+import eu.deltasource.internship.bankingsystem.factory.TransactionFactory;
+import eu.deltasource.internship.bankingsystem.factory.TransferTransactionFactory;
+import eu.deltasource.internship.bankingsystem.model.BankAccount;
+import eu.deltasource.internship.bankingsystem.model.BankInstitution;
+import eu.deltasource.internship.bankingsystem.model.Transaction;
+import eu.deltasource.internship.bankingsystem.repository.BankAccountRepository;
+import eu.deltasource.internship.bankingsystem.repository.BankInstitutionRepository;
+import eu.deltasource.internship.bankingsystem.repository.TransactionRepository;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+import java.util.List;
+import java.util.Map;
 
 public class TransactionService {
-    private TransactionModel transaction = new TransactionModel();
 
-    public TransactionModel getTransaction(){
-        return transaction;
+    public String printTransactionForAccount(String iban) {
+        return TransactionRepository.transactionRepository.getTransactionsByIban(iban).toString();
     }
 
-    public boolean createWithdrawOrDepositTransaction(String sourceIban, BankInstitutionModel sourceBank, double transferredAmount, Currency sourceCurrency, String transactionType){
-        transaction.setId(UUID.randomUUID().toString());
-        transaction.setSourceIban(sourceIban);
-        transaction.setSourceBank(sourceBank);
-        transaction.setTransferredAmount(transferredAmount);
-        transaction.setSourceCurrency(sourceCurrency);
-        transaction.setTransactionType(transactionType);
-        transaction.setTimestamp(LocalDateTime.now());
-        return false;
+    public String printBankTransactionListInfo(String bankName) {
+        List<Transaction> transactions = TransactionRepository.transactionRepository.getTransactionsByBankName(bankName);
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getTransactionListInfo(transactions);
     }
 
-    public boolean createTransferTransaction(String sourceIban, String targetIban, BankInstitutionModel sourceBank,BankInstitutionModel targetBank, double transferredAmount, Currency sourceCurrency, Currency targetCurrency, double exchangeRate, String transactionType){
-        transaction.setId(UUID.randomUUID().toString());
-        transaction.setSourceIban(sourceIban);
-        transaction.setTargetIban(targetIban);
-        transaction.setSourceBank(sourceBank);
-        transaction.setTargetBank(targetBank);
-        transaction.setTransferredAmount(transferredAmount);
-        transaction.setSourceCurrency(sourceCurrency);
-        transaction.setTargetCurrency(targetCurrency);
-        transaction.setExchangeRate(exchangeRate);
-        transaction.setTransactionType(transactionType);
-        transaction.setTimestamp(LocalDateTime.now());
-        return false;
+    private void createSimpleTransaction(TransactionType type, String sourceIban, String sourceBankName, Currency sourceCurrency,
+                                         double amount) {
+        BankAccount account = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
+        TransactionFactory transactionFactory = new TransactionFactory();
+        Transaction simpleTransaction = transactionFactory.createSimpleTransaction(type, sourceIban, sourceBankName,
+                sourceCurrency, amount);
+        account.addToTransactionHistory(simpleTransaction);
+        TransactionRepository.transactionRepository.addTransaction(sourceBankName, simpleTransaction);
     }
 
-    public String printTransaction(){
-        return transaction.toString();
+    private void createTransferTransaction(String sourceIban,
+                                           String sourceBankName,
+                                           double transferredAmount, double exchangeRate, String targetIban, String targetBankName,
+                                           double additionalFee) {
+        BankAccount sourceAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
+        BankAccount targetAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(targetIban);
+        TransferTransactionFactory transferTransactionFactory = new TransferTransactionFactory();
+        Transaction transferTransaction = transferTransactionFactory.createTransferTransaction(TransactionType.TRANSFER, sourceIban,
+                sourceBankName, sourceAccount.getCurrency(), transferredAmount, exchangeRate, targetIban, targetBankName,
+                additionalFee, targetAccount.getCurrency());
+        sourceAccount.addToTransactionHistory(transferTransaction);
+        targetAccount.addToTransactionHistory(transferTransaction);
+        TransactionRepository.transactionRepository.addTransaction(sourceBankName, transferTransaction);
+        TransactionRepository.transactionRepository.addTransaction(targetBankName, transferTransaction);
     }
+
+    public void withdraw(String iban, double amount) {
+        BankAccount account = BankAccountRepository.bankAccountRepository.getBankAccountByIban(iban);
+        account.reduceAmount(amount);
+        createSimpleTransaction(TransactionType.WITHDRAW, iban, account.getBankInstitutionName(), account.getCurrency(), amount);
+    }
+
+    public void deposit(String iban, double amount) {
+        BankAccount account = BankAccountRepository.bankAccountRepository.getBankAccountByIban(iban);
+        account.increaseAmount(amount);
+        createSimpleTransaction(TransactionType.DEPOSIT, iban, account.getBankInstitutionName(), account.getCurrency(), amount);
+    }
+
+
+    public Map<ExchangeRatePair, Double> getBankExchangeRatePairList(String bankName) {
+        BankInstitution sourceBank = BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName);
+        return sourceBank.getExchangeRatePairList();
+    }
+
+    public Map<FeeType, Double> getBankFeeList(String bankName) {
+        BankInstitution sourceBank = BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName);
+        return sourceBank.getFeeList();
+    }
+
+    public double getExchangeRateForAccount(String bankName, String sourceIban, String targetIban) {
+        BankAccount sourceAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
+        BankAccount targetAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(targetIban);
+        ExchangeRatePair exchangeRateName = ExchangeRatePair.valueOf(sourceAccount.getCurrency().name() + "_" + targetAccount.getCurrency().name());
+        if (getBankExchangeRatePairList(bankName).containsKey(exchangeRateName)) {
+            return getBankExchangeRatePairList(bankName).get(exchangeRateName);
+        }
+        return 0.0;
+    }
+
+    public double calculateExchangeValue(String bankName, String sourceIban, String targetIban, double transferredAmount) {
+        double exchangeRate = getExchangeRateForAccount(bankName, sourceIban, targetIban);
+        if (exchangeRate == 0.0) {
+            return 0;
+        }
+        return transferredAmount * exchangeRate;
+    }
+
+    public double calculateAdditionalFees(String sourceBankName, String targetBankName, BankAccount sourceAccount, BankAccount targetAccount) {
+        double additionalFee = getBankFeeList(sourceBankName).get(FeeType.TRANSFER_BETWEEN_TWO_ACCOUNTS);
+        if (!sourceBankName.equals(targetBankName)) {
+            additionalFee += getBankFeeList(sourceBankName).get(FeeType.BETWEEN_TWO_BANKS);
+        }
+        return additionalFee;
+    }
+
+    public void validateTransferAmount(double availableAmount, double amountReduced) {
+        if (amountReduced > availableAmount) {
+            throw new InvalidValueInputException("The amount is too high!");
+        }
+    }
+
+    public void validateAccountsType(AccountType sourceAccountType, AccountType targetAccountType) {
+        if (!sourceAccountType.equals(AccountType.CURRENT_ACCOUNT) || !targetAccountType.equals(AccountType.CURRENT_ACCOUNT)) {
+            throw new InvalidValueInputException("Both of the account have to be current");
+        }
+    }
+
+    public double getExchangeRateValue(Currency sourceAccountCurrency, Currency targetAccountCurrency, String sourceBankName, String sourceIban, String targetIban, double amount) {
+        if (sourceAccountCurrency.equals(targetAccountCurrency)) {
+            return 0;
+        }
+        return calculateExchangeValue(sourceBankName, sourceIban, targetIban, amount);
+    }
+
+    public void transfer(String sourceBankName, String targetBankName, String sourceIban, String targetIban, double amount) {
+        BankAccount sourceAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
+        BankAccount targetAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(targetIban);
+        double exchangeValue = getExchangeRateValue(sourceAccount.getCurrency(), targetAccount.getCurrency(), sourceBankName, sourceIban, targetIban, amount);
+        double additionalFees = calculateAdditionalFees(sourceBankName, targetBankName, sourceAccount, targetAccount);
+        double amountReduced = exchangeValue + additionalFees;
+        validateTransferAmount(sourceAccount.getAvailableAmount(), amountReduced);
+        validateAccountsType(sourceAccount.getType(), targetAccount.getType());
+        createTransferTransaction(sourceIban, sourceBankName, amount, exchangeValue,
+                targetIban, targetBankName, additionalFees);
+        sourceAccount.setAvailableAmount(sourceAccount.getAvailableAmount() - amountReduced);
+        targetAccount.setAvailableAmount(targetAccount.getAvailableAmount() + amount);
+    }
+
+    public String printBankStatementForAPeriod(String iban, int fromDay, int fromMonth, int fromYear, int fromHour, int fromMinute,
+                                               int toDay, int toMonth, int toYear, int toHour, int toMinute) {
+        LocalDateTime fromDate = LocalDateTime.of(fromYear, fromMonth, fromDay, fromHour, fromMinute);
+        LocalDateTime toDate = LocalDateTime.of(toYear, toMonth, toDay, toHour, toMinute);
+        return TransactionRepository.transactionRepository.getTransactionsByIbanAndTimeRange(iban, fromDate, toDate).toString();
+    }
+
+
 }

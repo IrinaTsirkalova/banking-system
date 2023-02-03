@@ -2,63 +2,98 @@ package eu.deltasource.internship.bankingsystem;
 
 import eu.deltasource.internship.bankingsystem.enums.AccountType;
 import eu.deltasource.internship.bankingsystem.enums.Currency;
-import eu.deltasource.internship.bankingsystem.enums.ExchangeRate;
-import eu.deltasource.internship.bankingsystem.enums.Fee;
-import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
-import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
-import eu.deltasource.internship.bankingsystem.exception.IncorrectDateInputException;
+import eu.deltasource.internship.bankingsystem.enums.ExchangeRatePair;
+import eu.deltasource.internship.bankingsystem.enums.FeeType;
+import eu.deltasource.internship.bankingsystem.factory.BankInstitutionFactory;
+import eu.deltasource.internship.bankingsystem.model.BankInstitution;
+import eu.deltasource.internship.bankingsystem.model.Customer;
+import eu.deltasource.internship.bankingsystem.factory.CustomerFactory;
 import eu.deltasource.internship.bankingsystem.service.BankAccountService;
 import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
 import eu.deltasource.internship.bankingsystem.service.CustomerService;
+import eu.deltasource.internship.bankingsystem.service.TransactionService;
 
 /**
  * Represents the program starting point
  */
 public class Application {
 
-    public static void main(String[] args) throws BlankInputException, IncorrectNameException, IncorrectDateInputException {
+    public static void printCustomer(CustomerService service, Customer customer) {
+        System.out.println(service.printCustomerInfo(customer));
+    }
 
-        CustomerService lilySmith = new CustomerService();
-        CustomerService samSmith = new CustomerService();
-        samSmith.createNewCustomer("Sam", "Smith", 18, 9, 2001);
-        lilySmith.createNewCustomer("Lily",  "Smith", 15, 6, 1993);
+    public static void printBank(BankInstitutionService service, String name) {
+        System.out.println(service.printBankInfo(name));
+    }
 
-        System.out.println(lilySmith.printCustomer());
-        System.out.println(samSmith.printCustomer());
+    public static void printBankAccounts(BankInstitutionService service, String name) {
+        System.out.println(service.printBankAccountInfo(name));
+    }
 
-        BankInstitutionService bnp = new BankInstitutionService();
-        bnp.createBankInstitution("BNP", "Vasil Aprilov №15");
-        bnp.addNewCustomer(lilySmith.getCustomer());
-        bnp.addFee(Fee.BETWEEN_TWO_BANKS, 0.80);
-        bnp.addFee(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS, 2.60);
-        bnp.addExchangeRate(ExchangeRate.BGN_EUR, 0.556951);
-        bnp.addExchangeRate(ExchangeRate.EUR_BGN, 0.511292);
+    public static void printBankFees(BankInstitutionService service, String name) {
+        System.out.println(service.printBankFeeInfo(name));
+    }
 
-        BankInstitutionService ddd = new BankInstitutionService();
-        ddd.createBankInstitution("DDD", "bul. Ruski");
-        ddd.addNewCustomer(samSmith.getCustomer());
-        ddd.addFee(Fee.TRANSFER_BETWEEN_TWO_ACCOUNTS, 1.55);
-        ddd.addFee(Fee.BETWEEN_TWO_BANKS, 2.10);
-        ddd.addExchangeRate(ExchangeRate.BGN_EUR, 1.6895);
-        ddd.addExchangeRate(ExchangeRate.EUR_BGN, 0.99898);
+    public static void printBankExchangeRate(BankInstitutionService service, String name) {
+        System.out.println(service.printBankExchangeRateInfo(name));
+    }
 
-        System.out.println(bnp.printBankInstitution());
+    public static void printCustomerBankAccount(BankAccountService service, String iban) {
+        System.out.println(service.printBankAccount(iban));
+    }
 
-        BankAccountService lilyAccount = new BankAccountService();
-        BankAccountService samAccount = new BankAccountService();
-        lilyAccount.createBankAccount(bnp.getBankInstitution(), lilySmith.getCustomer(), "1234567890123456789012", Currency.BGN, 12.50, AccountType.CURRENT_ACCOUNT);
-        samAccount.createBankAccount(bnp.getBankInstitution(), samSmith.getCustomer(), "1234567890123456789012", Currency.EUR, 12.50, AccountType.CURRENT_ACCOUNT);
+    public static void printBankCustomerNumbers(BankInstitutionService service, String name) {
+        System.out.println(service.printBankCustomersNumberInfo(name));
+    }
 
-        lilyAccount.deposit(100);
-        lilyAccount.withdraw(50);
-        System.out.println(lilyAccount.printBankAccount());
-        lilyAccount.transfer(lilyAccount.getBankAccount(), samAccount.getBankAccount(), 10);
 
-        System.out.println("Lily's account: " + lilyAccount.printBankAccount());
-        System.out.println("Sam's account: " + samAccount.printBankAccount());
+    public static void main(String[] args) {
 
-        System.out.println("----------------------------------------------------------------------------------------------------");
-        System.out.println(lilyAccount.printBankStatementForAPeriod(15, 01, 2023, 31, 1, 2023));
+        CustomerFactory customerFactory = new CustomerFactory();
+        Customer lily = customerFactory.createNewCustomer("Lily", "Smith", 1, 11, 2001);
+        Customer sam = customerFactory.createNewCustomer("Sam", "Thomas", 1, 11, 2001);
+        CustomerService customerService = new CustomerService();
+        customerService.addNewCustomer(lily);
+        customerService.addNewCustomer(sam);
+        printCustomer(customerService, lily);
+        printCustomer(customerService, sam);
+
+        BankInstitutionFactory bankInstitutionFactory = new BankInstitutionFactory();
+        BankInstitution dsk = bankInstitutionFactory.createBankInstitution("DSK", "Vasil Aprilov");
+        BankInstitution rfb = bankInstitutionFactory.createBankInstitution("RFB", "Vasil Naidenov");
+        BankInstitutionService bankInstitutionService = new BankInstitutionService();
+        bankInstitutionService.addNewBankInstitution(dsk);
+        bankInstitutionService.addNewBankInstitution(rfb);
+        printBank(bankInstitutionService, "DSK");
+        printBank(bankInstitutionService, "RFB");
+        printBankAccounts(bankInstitutionService, "DSK");
+        printBankAccounts(bankInstitutionService, "RFB");
+        bankInstitutionService.addNewFee("DSK", FeeType.BETWEEN_TWO_BANKS, 1.55);
+        bankInstitutionService.addNewFee("DSK", FeeType.TRANSFER_BETWEEN_TWO_ACCOUNTS, 0.55);
+        bankInstitutionService.addNewFee("RFB", FeeType.TRANSFER_BETWEEN_TWO_ACCOUNTS, 0.55);
+        printBankFees(bankInstitutionService, "DSK");
+        printBankFees(bankInstitutionService, "RFB");
+        bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.BGN_EUR, 1.55);
+        bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.EUR_BGN, 0.80);
+        printBankExchangeRate(bankInstitutionService, "DSK");
+        printBankExchangeRate(bankInstitutionService, "RFB");
+
+        BankAccountService bankAccountService = new BankAccountService();
+        bankAccountService.addNewBankAccount("DSK", lily, "111111", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT);
+        bankAccountService.addNewBankAccount("RFB", sam, "222", Currency.EUR, 15, AccountType.CURRENT_ACCOUNT);
+        printCustomerBankAccount(bankAccountService, "111111");
+        printBankAccounts(bankInstitutionService, "DSK");
+        printBankCustomerNumbers(bankInstitutionService, "DSK");
+
+        TransactionService transactionService = new TransactionService();
+        transactionService.withdraw("111111", 14);
+        transactionService.deposit("111111", 15);
+
+        printCustomerBankAccount(bankAccountService, "111111");
+        transactionService.transfer("DSK", "RFB", "111111", "222", 4);
+
+        System.out.println(transactionService.printBankTransactionListInfo("RFB"));
+        System.out.println("Statement: " + transactionService.printBankStatementForAPeriod("111111", 2, 2, 2023, 0, 0, 4, 2, 2023, 0, 0));
     }
 
 }

@@ -1,48 +1,55 @@
 package eu.deltasource.internship.bankingsystem.service;
 
-import eu.deltasource.internship.bankingsystem.enums.ExchangeRate;
-import eu.deltasource.internship.bankingsystem.enums.Fee;
-import eu.deltasource.internship.bankingsystem.exception.BlankInputException;
-import eu.deltasource.internship.bankingsystem.exception.IncorrectNameException;
-import eu.deltasource.internship.bankingsystem.model.BankInstitutionModel;
-import eu.deltasource.internship.bankingsystem.model.CustomerModel;
+import eu.deltasource.internship.bankingsystem.enums.ExchangeRatePair;
+import eu.deltasource.internship.bankingsystem.enums.FeeType;
+import eu.deltasource.internship.bankingsystem.model.BankAccount;
+import eu.deltasource.internship.bankingsystem.model.BankInstitution;
+import eu.deltasource.internship.bankingsystem.model.Customer;
+import eu.deltasource.internship.bankingsystem.repository.BankAccountRepository;
+import eu.deltasource.internship.bankingsystem.repository.BankInstitutionRepository;
 
-import java.util.UUID;
+import java.util.List;
 
+/**
+ * Used when the user wants to add new bank institution in the repository
+ * when the user wants to add a fee to specific bank
+ * when the user wants to add an exchange rate to a specific bank
+ * when the user wants to print information for specific bank
+ * when the user wants to print information for the number of users for a specific bank
+ */
 public class BankInstitutionService {
-    private final BankInstitutionModel bankInstitution = new BankInstitutionModel();
 
-    public boolean createBankInstitution(String name, String address) throws IncorrectNameException, BlankInputException {
-        bankInstitution.setId(UUID.randomUUID().toString());
-        bankInstitution.setName(name);
-        bankInstitution.setAddress(address);
-        bankInstitution.setNumberOfCustomers(0);
-        bankInstitution.setFeeList(bankInstitution.getFeeList());
-        return true;
+    public void addNewBankInstitution(BankInstitution bank) {
+        BankInstitutionRepository.bankInstitutionsRepository.addBank(bank);
     }
 
-    public BankInstitutionModel getBankInstitution(){
-        return bankInstitution;
-    }
-    public void addNewCustomer(CustomerModel customer){
-        bankInstitution.getCustomers().add(customer);
-        bankInstitution.setNumberOfCustomers(bankInstitution.getNumberOfCustomers() + 1);
+    public void addNewFee(String bankName, FeeType type, Double value) {
+        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).addFee(type, value);
     }
 
-    public boolean addFee(Fee name, Double value){
-        if(name != null && value != 0.0){
-            bankInstitution.getFeeList().put(name, value);
-            return true;
-        }
-        return false;
+    public void addNewExchangeRate(String bankName, ExchangeRatePair exchangeRatePair, Double value) {
+        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).addExchangeRatePair(exchangeRatePair, value);
     }
 
-    public void addExchangeRate(ExchangeRate currency, Double value){
-        if(currency != null && value != 0.0){
-            bankInstitution.getExchangeRateList().put(currency, value);
-        }
+    public String printBankInfo(String bankName) {
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getBankInstitutionInfo();
     }
-    public String printBankInstitution(){
-        return bankInstitution.toString();
+
+    public String printBankCustomersNumberInfo(String bankName) {
+        List<Customer> bankCustomers = BankAccountRepository.bankAccountRepository.getBankCustomersByBankName(bankName);
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getBankInstitutionCustomerNumberInfo(bankCustomers);
+    }
+
+    public String printBankAccountInfo(String bankName) {
+        List<BankAccount> bankAccounts = BankAccountRepository.bankAccountRepository.getBankAccountsByBankName(bankName);
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getBankAccountListInfo(bankAccounts);
+    }
+
+    public String printBankFeeInfo(String bankName) {
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getFeeListInfo();
+    }
+
+    public String printBankExchangeRateInfo(String bankName) {
+        return BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).getExchangeRateListInfo();
     }
 }
