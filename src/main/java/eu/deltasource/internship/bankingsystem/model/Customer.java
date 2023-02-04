@@ -39,7 +39,6 @@ public class Customer {
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        Validation.validateCorrectDate(birthdate.getDayOfMonth(), birthdate.getMonthValue(), birthdate.getYear());
         this.birthdate = birthdate;
     }
 

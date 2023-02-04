@@ -9,8 +9,16 @@ public class CustomerService {
         return CustomerRepository.customerRepository.getCustomer(customer);
     }
 
+    public void removeCustomer(Customer customer) {
+        CustomerRepository.customerRepository.removeCustomer(customer);
+    }
+
     public void addNewCustomer(Customer customer) {
         CustomerRepository.customerRepository.addCustomer(customer);
+    }
+
+    public void updateCustomer(Customer customer, String firstName, String lastName, int day, int month, int year) {
+        CustomerRepository.customerRepository.updateCustomer(customer, firstName, lastName, day, month, year);
     }
 
     public String printCustomerInfo(Customer customer) {

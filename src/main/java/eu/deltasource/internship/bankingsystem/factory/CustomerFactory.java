@@ -13,6 +13,7 @@ public class CustomerFactory {
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         Validation.validateCorrectDate(day, month, year);
+        Validation.validateFebruaryDays(day, month, year);
         LocalDate birthdate = LocalDate.of(year, month, day);
         customer.setBirthdate(birthdate);
         return customer;

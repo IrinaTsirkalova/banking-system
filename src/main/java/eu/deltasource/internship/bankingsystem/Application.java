@@ -8,10 +8,7 @@ import eu.deltasource.internship.bankingsystem.factory.BankInstitutionFactory;
 import eu.deltasource.internship.bankingsystem.model.BankInstitution;
 import eu.deltasource.internship.bankingsystem.model.Customer;
 import eu.deltasource.internship.bankingsystem.factory.CustomerFactory;
-import eu.deltasource.internship.bankingsystem.service.BankAccountService;
-import eu.deltasource.internship.bankingsystem.service.BankInstitutionService;
-import eu.deltasource.internship.bankingsystem.service.CustomerService;
-import eu.deltasource.internship.bankingsystem.service.TransactionService;
+import eu.deltasource.internship.bankingsystem.service.*;
 
 /**
  * Represents the program starting point
@@ -90,10 +87,11 @@ public class Application {
         transactionService.deposit("111111", 15);
 
         printCustomerBankAccount(bankAccountService, "111111");
-        transactionService.transfer("DSK", "RFB", "111111", "222", 4);
+        TransferTransactionService transferTransactionService = new TransferTransactionService();
+        transferTransactionService.transfer("DSK", "RFB", "111111", "222", 4);
 
         System.out.println(transactionService.printBankTransactionListInfo("RFB"));
-        System.out.println("Statement: " + transactionService.printBankStatementForAPeriod("111111", 2, 2, 2023, 0, 0, 4, 2, 2023, 0, 0));
+        System.out.println("Statement: " + transactionService.printBankStatementForAPeriod("111111", 2, 2, 2023, 0, 0, 4, 2, 2023, 11, 0));
     }
 
 }

@@ -1,8 +1,12 @@
 package eu.deltasource.internship.bankingsystem.repository;
 
+import eu.deltasource.internship.bankingsystem.Validation;
 import eu.deltasource.internship.bankingsystem.exception.ElementAlreadyExistsException;
+import eu.deltasource.internship.bankingsystem.exception.ElementDoesNotExistsException;
 import eu.deltasource.internship.bankingsystem.model.Customer;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +28,39 @@ public class CustomerRepository {
         customers.add(customer);
     }
 
+    public void removeCustomer(Customer customer){
+        validateCustomer(customer);
+        customers.remove(customer);
+    }
+
+    public void updateCustomer(Customer customer, String firstName, String lastName, int day, int month, int year){
+        validateCustomer(customer);
+        validateUpdateCustomer(firstName, lastName, day, month, year);
+        getCustomer(customer).setFirstName(firstName);
+        getCustomer(customer).setLastName(lastName);
+        getCustomer(customer).setBirthdate(LocalDate.of(year,month,day));
+    }
+
     public Customer getCustomer(Customer searchCustomer) {
-        Customer customerResult = null;
-        if (doesCustomerExists(searchCustomer)) {
-            customerResult = customers.stream().filter(ec -> searchCustomer.getFirstName().equals(ec.getFirstName())
+        validateCustomer(searchCustomer);
+        return customers.stream().filter(ec -> searchCustomer.getFirstName().equals(ec.getFirstName())
                             && searchCustomer.getLastName().equals(ec.getLastName())
                             && searchCustomer.getBirthdate().isEqual(ec.getBirthdate()))
                     .findFirst().get();
+    }
+
+    public void validateCustomer(Customer customer){
+        if(!doesCustomerExists(customer)){
+            throw new ElementDoesNotExistsException("There is no such customer!");
         }
-        return customerResult;
+    }
+
+    public void validateUpdateCustomer(String firstName, String lastName, int day, int month, int year){
+        Validation.validateForNoName(firstName);
+        Validation.validateForNonLetters(firstName);
+        Validation.validateForNoName(lastName);
+        Validation.validateForNonLetters(lastName);
+        Validation.validateCorrectDate(day, month, year);
+        Validation.validateFebruaryDays(day, month, year);
     }
 }
