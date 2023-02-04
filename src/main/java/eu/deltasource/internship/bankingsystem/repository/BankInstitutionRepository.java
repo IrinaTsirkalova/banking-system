@@ -8,24 +8,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankInstitutionRepository {
+
     public static final BankInstitutionRepository bankInstitutionsRepository = new BankInstitutionRepository();
     private final List<BankInstitution> bankInstitutions = new ArrayList<>();
 
-    public boolean doesBankExist(String name) {
-        return bankInstitutions.stream().anyMatch(c -> c.getName().equals(name));
+    public boolean doesBankInstitutionExist(String bankName) {
+        return bankInstitutions.stream().anyMatch(c -> c.getName().equals(bankName));
     }
 
-    public void addBank(BankInstitution bank) {
-        if (doesBankExist(bank.getName())) {
-            throw new ElementAlreadyExistsException("This bank is already in the database");
+    public void addBankInstitution(BankInstitution bank) {
+        if (doesBankInstitutionExist(bank.getName())) {
+            throw new ElementAlreadyExistsException("This bank is already exists");
         }
         bankInstitutions.add(bank);
     }
 
-    public BankInstitution getBankInstitutionByName(String name) {
-        if (!doesBankExist(name)) {
+    public void removeBankInstitution(String bankName) {
+        validateBankInstitution(bankName);
+        bankInstitutions.remove(getBankInstitutionByName(bankName));
+    }
+
+    public BankInstitution getBankInstitutionByName(String bankName) {
+        validateBankInstitution(bankName);
+        return bankInstitutions.stream().filter(b -> b.getName().equals(bankName)).findFirst().get();
+    }
+
+    public void validateBankInstitution(String bankName) {
+        if (!doesBankInstitutionExist(bankName)) {
             throw new ElementDoesNotExistsException("There is no such bank");
         }
-        return bankInstitutions.stream().filter(b -> b.getName().equals(name)).findFirst().get();
     }
 }

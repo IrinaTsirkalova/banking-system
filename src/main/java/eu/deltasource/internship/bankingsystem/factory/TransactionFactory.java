@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class TransactionFactory {
-    public Transaction createSimpleTransaction(TransactionType type, String sourceIban, String sourceBankName, Currency sourceCurrency,
+
+    public Transaction createSimpleTransaction(String id, TransactionType type, String sourceIban, String sourceBankName, Currency sourceCurrency,
                                                double transferredAmount) {
         Transaction transaction = new Transaction();
-        transaction.setId(UUID.randomUUID().toString());
+        transaction.setId(id);
         transaction.setTransactionType(type);
         transaction.setSourceIban(sourceIban);
         transaction.setSourceBankName(sourceBankName);

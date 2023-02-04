@@ -14,20 +14,24 @@ import java.util.Map;
 
 public class TransferTransactionService {
 
-    private void createTransferTransaction(String sourceIban,
+    private void createTransferTransaction(String id, String sourceIban,
                                            String sourceBankName,
                                            double transferredAmount, double exchangeRate, String targetIban, String targetBankName,
                                            double additionalFee) {
         BankAccount sourceAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
         BankAccount targetAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(targetIban);
         TransferTransactionFactory transferTransactionFactory = new TransferTransactionFactory();
-        Transaction transferTransaction = transferTransactionFactory.createTransferTransaction(TransactionType.TRANSFER, sourceIban,
+        Transaction transferTransaction = transferTransactionFactory.createTransferTransaction(id, TransactionType.TRANSFER, sourceIban,
                 sourceBankName, sourceAccount.getCurrency(), transferredAmount, exchangeRate, targetIban, targetBankName,
                 additionalFee, targetAccount.getCurrency());
         sourceAccount.addToTransactionHistory(transferTransaction);
         targetAccount.addToTransactionHistory(transferTransaction);
         TransactionRepository.transactionRepository.addTransaction(sourceBankName, transferTransaction);
         TransactionRepository.transactionRepository.addTransaction(targetBankName, transferTransaction);
+    }
+
+    public void removeTransaction(String id) {
+        TransactionRepository.transactionRepository.removeTransaction(id);
     }
 
     public Map<ExchangeRatePair, Double> getBankExchangeRatePairList(String bankName) {
@@ -80,12 +84,12 @@ public class TransferTransactionService {
 
     public double getExchangeRateValue(Currency sourceAccountCurrency, Currency targetAccountCurrency, String sourceBankName, String sourceIban, String targetIban, double amount) {
         if (sourceAccountCurrency.equals(targetAccountCurrency)) {
-            return 0;
+            return amount;
         }
         return calculateExchangeValue(sourceBankName, sourceIban, targetIban, amount);
     }
 
-    public void transfer(String sourceBankName, String targetBankName, String sourceIban, String targetIban, double amount) {
+    public void transfer(String id, String sourceBankName, String targetBankName, String sourceIban, String targetIban, double amount) {
         BankAccount sourceAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(sourceIban);
         BankAccount targetAccount = BankAccountRepository.bankAccountRepository.getBankAccountByIban(targetIban);
         double exchangeValue = getExchangeRateValue(sourceAccount.getCurrency(), targetAccount.getCurrency(), sourceBankName, sourceIban, targetIban, amount);
@@ -93,7 +97,7 @@ public class TransferTransactionService {
         double amountReduced = exchangeValue + additionalFees;
         validateTransferAmount(sourceAccount.getAvailableAmount(), amountReduced);
         validateAccountsType(sourceAccount.getType(), targetAccount.getType());
-        createTransferTransaction(sourceIban, sourceBankName, amount, exchangeValue,
+        createTransferTransaction(id, sourceIban, sourceBankName, amount, exchangeValue,
                 targetIban, targetBankName, additionalFees);
         sourceAccount.setAvailableAmount(sourceAccount.getAvailableAmount() - amountReduced);
         targetAccount.setAvailableAmount(targetAccount.getAvailableAmount() + amount);

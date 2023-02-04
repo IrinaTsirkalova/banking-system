@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class CustomerFactory {
+
     public Customer createNewCustomer(String firstName, String lastName, int day, int month, int year) {
         Customer customer = new Customer();
         customer.setId(UUID.randomUUID().toString());

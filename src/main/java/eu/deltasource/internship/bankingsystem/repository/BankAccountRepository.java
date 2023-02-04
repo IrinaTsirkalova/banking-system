@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BankAccountRepository {
+
     public static final BankAccountRepository bankAccountRepository = new BankAccountRepository();
     private final Map<BankAccount, String> bankAccounts = new HashMap<>();
 
@@ -24,6 +25,13 @@ public class BankAccountRepository {
             throw new ElementAlreadyExistsException("There is a bank account with the same iban!");
         }
         bankAccounts.put(account, bankName);
+    }
+
+    public void removeBankAccount(String iban) {
+        if (!doesBankAccountExist(iban)) {
+            throw new ElementDoesNotExistsException("There is no such bank account");
+        }
+        bankAccounts.remove(getBankAccountByIban(iban));
     }
 
     public BankAccount getBankAccountByIban(String iban) {

@@ -4,46 +4,77 @@ import eu.deltasource.internship.bankingsystem.exception.ElementAlreadyExistsExc
 import eu.deltasource.internship.bankingsystem.Validation;
 import eu.deltasource.internship.bankingsystem.enums.ExchangeRatePair;
 import eu.deltasource.internship.bankingsystem.enums.FeeType;
+import eu.deltasource.internship.bankingsystem.exception.ElementDoesNotExistsException;
 
 import java.util.*;
 
 public class BankInstitution {
+
     private String id;
     private String name;
     private String address;
     private final Map<FeeType, Double> feeList = new TreeMap<>();
     private final Map<ExchangeRatePair, Double> exchangeRatePairList = new TreeMap<>();
 
-    public void doesFeeExists(FeeType type) {
-        if (feeList.containsKey(type)) {
-            throw new ElementAlreadyExistsException("This fee already exists!");
+    public void validateFee(FeeType fee) {
+        if (!doesFeeExists(fee)) {
+            throw new ElementDoesNotExistsException("There is no such fee");
         }
     }
 
-    public void addFee(FeeType type, Double value) {
-        doesFeeExists(type);
-        Validation.validateFeeInputName(type);
-        Validation.validateFeeInputValue(value);
-        feeList.put(type, value);
+    public void validateExchangeRatePair(ExchangeRatePair pair) {
+        if (!doesExchangeRatePairExists(pair)) {
+            throw new ElementDoesNotExistsException("There is no such exchange rate pair");
+        }
     }
 
-    public void addExchangeRatePair(ExchangeRatePair exchangeRatePair, Double exchangeRatePairValue) {
-        if (doesExchangeRatePairExists(exchangeRatePair)) {
-            throw new ElementAlreadyExistsException("This pair already exists!");
-        }
-        Validation.validateExchangeRatePairInputName(exchangeRatePair);
-        Validation.validateExchangeRatePairInputValue(exchangeRatePairValue);
-        exchangeRatePairList.put(exchangeRatePair, exchangeRatePairValue);
+    public boolean doesFeeExists(FeeType type) {
+        return feeList.containsKey(type);
     }
 
     public boolean doesExchangeRatePairExists(ExchangeRatePair exchangeRatePair) {
         return exchangeRatePairList.containsKey(exchangeRatePair);
     }
 
-    public void updateExchangeRate(ExchangeRatePair exchangeRatePair, Double value) {
-        if (doesExchangeRatePairExists(exchangeRatePair)) {
-            exchangeRatePairList.replace(exchangeRatePair, value);
+    public void addFee(FeeType type, Double value) {
+        Validation.validateFeeInputName(type);
+        if (doesFeeExists(type)) {
+            throw new ElementAlreadyExistsException("This fee already exists!");
         }
+        Validation.validateFeeInputValue(value);
+        feeList.put(type, value);
+    }
+
+    public void removeFee(FeeType type) {
+        Validation.validateFeeInputName(type);
+        validateFee(type);
+        feeList.remove(type);
+    }
+
+    public void updateFee(FeeType type, Double value) {
+        Validation.validateFeeInputName(type);
+        validateFee(type);
+        feeList.replace(type, value);
+    }
+
+    public void addExchangeRatePair(ExchangeRatePair exchangeRatePair, Double exchangeRatePairValue) {
+        Validation.validateExchangeRatePairInputName(exchangeRatePair);
+        Validation.validateExchangeRatePairInputValue(exchangeRatePairValue);
+        if (doesExchangeRatePairExists(exchangeRatePair)) {
+            throw new ElementAlreadyExistsException("This pair already exists!");
+        }
+        exchangeRatePairList.put(exchangeRatePair, exchangeRatePairValue);
+    }
+
+    public void removeExchangeRate(ExchangeRatePair pair) {
+        Validation.validateExchangeRatePairInputName(pair);
+        validateExchangeRatePair(pair);
+        exchangeRatePairList.remove(pair);
+    }
+
+    public void updateExchangeRate(ExchangeRatePair exchangeRatePair, Double value) {
+        validateExchangeRatePair(exchangeRatePair);
+        exchangeRatePairList.replace(exchangeRatePair, value);
     }
 
     public String getBankAccountListInfo(List<BankAccount> bankAccounts) {

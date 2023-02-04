@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validation {
+
     public static void validateForNoName(String name) {
         if (name.isBlank()) {
             throw new InvalidValueInputException("Please enter a name!");
@@ -45,6 +46,7 @@ public class Validation {
     }
 
     public static void validateFeeInputName(FeeType feeTypeName) {
+
         if (feeTypeName == null) {
             throw new InvalidValueInputException("Please enter a fee type");
         }
@@ -67,5 +69,4 @@ public class Validation {
             throw new InvalidValueInputException("Please enter an exchange rate value that is at least 0.01!");
         }
     }
-
 }

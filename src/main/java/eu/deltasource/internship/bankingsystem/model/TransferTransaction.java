@@ -3,6 +3,7 @@ package eu.deltasource.internship.bankingsystem.model;
 import eu.deltasource.internship.bankingsystem.enums.Currency;
 
 public class TransferTransaction extends Transaction {
+
     private String targetIban;
     private String targetBankName;
     private double additionalFee;

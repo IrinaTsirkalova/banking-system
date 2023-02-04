@@ -5,6 +5,7 @@ import eu.deltasource.internship.bankingsystem.Validation;
 import java.time.LocalDate;
 
 public class Customer {
+
     private String id;
     private String firstName;
     private String lastName;

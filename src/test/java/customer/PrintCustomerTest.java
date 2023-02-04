@@ -28,6 +28,7 @@ public class PrintCustomerTest {
 
         //Then
         assertEquals(info, tom.toString());
+        customerService.removeCustomer(tom);
     }
 
     @Test

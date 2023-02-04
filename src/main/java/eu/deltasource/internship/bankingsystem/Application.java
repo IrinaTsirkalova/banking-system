@@ -43,7 +43,6 @@ public class Application {
         System.out.println(service.printBankCustomersNumberInfo(name));
     }
 
-
     public static void main(String[] args) {
 
         CustomerFactory customerFactory = new CustomerFactory();
@@ -65,11 +64,13 @@ public class Application {
         printBank(bankInstitutionService, "RFB");
         printBankAccounts(bankInstitutionService, "DSK");
         printBankAccounts(bankInstitutionService, "RFB");
+
         bankInstitutionService.addNewFee("DSK", FeeType.BETWEEN_TWO_BANKS, 1.55);
         bankInstitutionService.addNewFee("DSK", FeeType.TRANSFER_BETWEEN_TWO_ACCOUNTS, 0.55);
         bankInstitutionService.addNewFee("RFB", FeeType.TRANSFER_BETWEEN_TWO_ACCOUNTS, 0.55);
         printBankFees(bankInstitutionService, "DSK");
         printBankFees(bankInstitutionService, "RFB");
+
         bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.BGN_EUR, 1.55);
         bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.EUR_BGN, 0.80);
         printBankExchangeRate(bankInstitutionService, "DSK");
@@ -83,15 +84,14 @@ public class Application {
         printBankCustomerNumbers(bankInstitutionService, "DSK");
 
         TransactionService transactionService = new TransactionService();
-        transactionService.withdraw("111111", 14);
-        transactionService.deposit("111111", 15);
-
+        transactionService.withdraw("123", "111111", 14);
+        transactionService.deposit("1234", "111111", 15);
         printCustomerBankAccount(bankAccountService, "111111");
+
         TransferTransactionService transferTransactionService = new TransferTransactionService();
-        transferTransactionService.transfer("DSK", "RFB", "111111", "222", 4);
-
+        transferTransactionService.transfer("3", "DSK", "RFB", "111111", "222", 4);
         System.out.println(transactionService.printBankTransactionListInfo("RFB"));
-        System.out.println("Statement: " + transactionService.printBankStatementForAPeriod("111111", 2, 2, 2023, 0, 0, 4, 2, 2023, 11, 0));
+        System.out.println("Statement: " + transactionService.printBankStatementForAPeriod("111111", 2, 2, 2023, 0, 0, 4, 2, 2023, 22, 30));
+        System.out.println("Statement2: " + transactionService.printTransactionForAccount("222"));
     }
-
 }

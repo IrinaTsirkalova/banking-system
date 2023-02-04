@@ -8,6 +8,7 @@ import eu.deltasource.internship.bankingsystem.model.Customer;
 import java.util.UUID;
 
 public class BankAccountFactory {
+
     public BankAccount createBankAccount(String bankInstitutionName, Customer customer,
                                          String iban, Currency currency, double availableAmount, AccountType type) {
         BankAccount bankAccount = new BankAccount();

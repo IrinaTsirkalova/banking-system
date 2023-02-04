@@ -6,6 +6,7 @@ import eu.deltasource.internship.bankingsystem.enums.TransactionType;
 import java.time.LocalDateTime;
 
 public class Transaction {
+
     private String id;
     private TransactionType transactionType;
     private String sourceIban;
@@ -14,7 +15,7 @@ public class Transaction {
     private double transferredAmount;
     private LocalDateTime timestamp;
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 
@@ -58,7 +59,7 @@ public class Transaction {
         this.sourceCurrency = sourceCurrency;
     }
 
-    public LocalDateTime getTimestamp(){
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -70,8 +71,8 @@ public class Transaction {
         this.transactionType = transactionType;
     }
 
-    public String toString(){
-        return  "Transaction information: -----------------\n" +
+    public String toString() {
+        return "Transaction information: -----------------\n" +
                 "Transaction id: " + id +
                 "; Bank name: " + sourceBankName +
                 "; Source IBAN: " + sourceIban +

@@ -6,12 +6,12 @@ import eu.deltasource.internship.bankingsystem.exception.ElementDoesNotExistsExc
 import eu.deltasource.internship.bankingsystem.model.Customer;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class CustomerRepository {
+
     public static final CustomerRepository customerRepository = new CustomerRepository();
     final List<Customer> customers = new ArrayList<>();
 
@@ -28,34 +28,34 @@ public class CustomerRepository {
         customers.add(customer);
     }
 
-    public void removeCustomer(Customer customer){
+    public void removeCustomer(Customer customer) {
         validateCustomer(customer);
         customers.remove(customer);
     }
 
-    public void updateCustomer(Customer customer, String firstName, String lastName, int day, int month, int year){
+    public void updateCustomer(Customer customer, String firstName, String lastName, int day, int month, int year) {
         validateCustomer(customer);
         validateUpdateCustomer(firstName, lastName, day, month, year);
         getCustomer(customer).setFirstName(firstName);
         getCustomer(customer).setLastName(lastName);
-        getCustomer(customer).setBirthdate(LocalDate.of(year,month,day));
+        getCustomer(customer).setBirthdate(LocalDate.of(year, month, day));
     }
 
     public Customer getCustomer(Customer searchCustomer) {
         validateCustomer(searchCustomer);
         return customers.stream().filter(ec -> searchCustomer.getFirstName().equals(ec.getFirstName())
-                            && searchCustomer.getLastName().equals(ec.getLastName())
-                            && searchCustomer.getBirthdate().isEqual(ec.getBirthdate()))
-                    .findFirst().get();
+                        && searchCustomer.getLastName().equals(ec.getLastName())
+                        && searchCustomer.getBirthdate().isEqual(ec.getBirthdate()))
+                .findFirst().get();
     }
 
-    public void validateCustomer(Customer customer){
-        if(!doesCustomerExists(customer)){
+    public void validateCustomer(Customer customer) {
+        if (!doesCustomerExists(customer)) {
             throw new ElementDoesNotExistsException("There is no such customer!");
         }
     }
 
-    public void validateUpdateCustomer(String firstName, String lastName, int day, int month, int year){
+    public void validateUpdateCustomer(String firstName, String lastName, int day, int month, int year) {
         Validation.validateForNoName(firstName);
         Validation.validateForNonLetters(firstName);
         Validation.validateForNoName(lastName);
