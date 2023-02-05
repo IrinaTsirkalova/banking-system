@@ -138,7 +138,6 @@ public class CreateCustomerTest {
         assertTrue(exceptionInvalidBirthdateInputException.getMessage().contentEquals("February can not have 30 days!"));
     }
 
-
     @Test
     public void should_ThrowRuntimeException_IfBirthMonthIsBelow1() {
         //Given

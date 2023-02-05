@@ -24,7 +24,7 @@ public class BankInstitutionService {
         BankInstitutionRepository.bankInstitutionsRepository.addBankInstitution(bank);
     }
 
-    public void removeBankInstitution(String name){
+    public void removeBankInstitution(String name) {
         BankInstitutionRepository.bankInstitutionsRepository.removeBankInstitution(name);
     }
 
@@ -37,7 +37,7 @@ public class BankInstitutionService {
     }
 
     public void updateFee(String bankName, FeeType type, Double value) {
-        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).updateFee(type,value);
+        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).updateFee(type, value);
     }
 
     public void addNewExchangeRate(String bankName, ExchangeRatePair exchangeRatePair, Double value) {
@@ -49,7 +49,7 @@ public class BankInstitutionService {
     }
 
     public void updateExchangeRate(String bankName, ExchangeRatePair pair, Double value) {
-        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).updateExchangeRate(pair,value);
+        BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName(bankName).updateExchangeRate(pair, value);
     }
 
     public String printBankInfo(String bankName) {

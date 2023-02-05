@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CustomerRepository {
 
     public static final CustomerRepository customerRepository = new CustomerRepository();

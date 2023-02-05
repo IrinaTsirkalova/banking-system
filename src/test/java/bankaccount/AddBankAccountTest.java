@@ -41,7 +41,7 @@ public class AddBankAccountTest {
         BankAccountService bankAccountService = new BankAccountService();
 
         //Then
-        assertDoesNotThrow(() ->  bankAccountService.addNewBankAccount("DSK", lily, "111", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
+        assertDoesNotThrow(() -> bankAccountService.addNewBankAccount("DSK", lily, "111", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
         bankAccountService.removeBankAccount("111");
         customerService.removeCustomer(lily);
         bankInstitutionService.removeBankInstitution("DSK");
@@ -61,8 +61,8 @@ public class AddBankAccountTest {
         BankAccountService bankAccountService = new BankAccountService();
 
         //Then
-        assertDoesNotThrow(() ->  bankAccountService.addNewBankAccount("DSK", lily, "111", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
-        assertDoesNotThrow(() ->  bankAccountService.addNewBankAccount("DSK", lily, "1112", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
+        assertDoesNotThrow(() -> bankAccountService.addNewBankAccount("DSK", lily, "111", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
+        assertDoesNotThrow(() -> bankAccountService.addNewBankAccount("DSK", lily, "1112", Currency.BGN, 15, AccountType.CURRENT_ACCOUNT));
         bankAccountService.removeBankAccount("1112");
         bankAccountService.removeBankAccount("111");
         customerService.removeCustomer(lily);
@@ -83,8 +83,8 @@ public class AddBankAccountTest {
         BankAccountService bankAccountService = new BankAccountService();
 
         //Then
-        assertDoesNotThrow(() ->  bankAccountService.addNewBankAccount("DSK", lily, "111",null, 15, AccountType.CURRENT_ACCOUNT));
-        assertEquals(Currency.BGN,BankAccountRepository.bankAccountRepository.getBankAccountByIban("111").getCurrency());
+        assertDoesNotThrow(() -> bankAccountService.addNewBankAccount("DSK", lily, "111", null, 15, AccountType.CURRENT_ACCOUNT));
+        assertEquals(Currency.BGN, BankAccountRepository.bankAccountRepository.getBankAccountByIban("111").getCurrency());
         bankAccountService.removeBankAccount("111");
         customerService.removeCustomer(lily);
         bankInstitutionService.removeBankInstitution("DSK");

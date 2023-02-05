@@ -44,7 +44,7 @@ public class WithdrawTransactionTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.withdraw("1","111", 5);
+        transactionService.withdraw("1", "111", 5);
 
         //Then
         assertEquals(BankAccountRepository.bankAccountRepository.getBankAccountByIban("111").getAvailableAmount(), 5);
@@ -73,7 +73,7 @@ public class WithdrawTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(ElementDoesNotExistsException.class,
-                () -> transactionService.withdraw("11","11", 5));
+                () -> transactionService.withdraw("11", "11", 5));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("There is no such bank account"));
@@ -101,7 +101,7 @@ public class WithdrawTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                () -> transactionService.withdraw("11","111", 15));
+                () -> transactionService.withdraw("11", "111", 15));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount you want to withdraw is too much!"));
@@ -129,7 +129,7 @@ public class WithdrawTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                () -> transactionService.withdraw("11","111", 10));
+                () -> transactionService.withdraw("11", "111", 10));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount you want to withdraw is too much!"));
@@ -157,7 +157,7 @@ public class WithdrawTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                () -> transactionService.withdraw("11","111", -1));
+                () -> transactionService.withdraw("11", "111", -1));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount should be above 0"));

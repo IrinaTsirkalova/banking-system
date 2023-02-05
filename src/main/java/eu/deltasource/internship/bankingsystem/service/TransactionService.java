@@ -12,6 +12,14 @@ import java.time.LocalDateTime;
 
 import java.util.List;
 
+/**
+ * Used when:
+ * - the user wants to print transactions information for specific account
+ * - the user wants to print transactions information for specific bank
+ * - the user wants to print bank statement for account transactions for a specified time range
+ * - the user wants to make a withdrawal transaction
+ * - the user wants to make a deposit transaction
+ */
 public class TransactionService {
 
     public String printTransactionForAccount(String iban) {

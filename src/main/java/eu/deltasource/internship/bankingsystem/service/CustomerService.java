@@ -3,6 +3,13 @@ package eu.deltasource.internship.bankingsystem.service;
 import eu.deltasource.internship.bankingsystem.model.Customer;
 import eu.deltasource.internship.bankingsystem.repository.CustomerRepository;
 
+/**
+ * Used when:
+ * - the user wants to remove a specific customer
+ * - the user wants to add a new customer
+ * - the user wants to update an existing customer
+ * - the user wants to print information about a customer
+ */
 public class CustomerService {
 
     public Customer getCustomer(Customer customer) {

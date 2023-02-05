@@ -24,7 +24,7 @@ public class BankAccountService {
         BankAccountRepository.bankAccountRepository.addBankAccountToBank(bankName, account);
     }
 
-    public void removeBankAccount(String iban){
+    public void removeBankAccount(String iban) {
         BankAccountRepository.bankAccountRepository.removeBankAccount(iban);
     }
 

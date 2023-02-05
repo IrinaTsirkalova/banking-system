@@ -5,7 +5,6 @@ import eu.deltasource.internship.bankingsystem.enums.TransactionType;
 import eu.deltasource.internship.bankingsystem.model.Transaction;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class TransactionFactory {
 

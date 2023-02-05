@@ -36,7 +36,7 @@ public class AddFeeTest {
         //Then
         BankInstitution bankInRepository = BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName("DSK");
         assertTrue(bankInRepository.getFeeList().containsKey(FeeType.BETWEEN_TWO_BANKS));
-        bankInstitutionService.removeFee("DSK",FeeType.BETWEEN_TWO_BANKS);
+        bankInstitutionService.removeFee("DSK", FeeType.BETWEEN_TWO_BANKS);
         bankInstitutionService.removeBankInstitution("DSK");
     }
 
@@ -68,7 +68,7 @@ public class AddFeeTest {
 
         //Then
         assertTrue(exceptionElementAlreadyExists.getMessage().contentEquals("This fee already exists!"));
-        bankInstitutionService.removeFee("DSK",FeeType.BETWEEN_TWO_BANKS);
+        bankInstitutionService.removeFee("DSK", FeeType.BETWEEN_TWO_BANKS);
         bankInstitutionService.removeBankInstitution("DSK");
     }
 

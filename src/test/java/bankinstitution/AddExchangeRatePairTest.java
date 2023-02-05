@@ -37,7 +37,7 @@ public class AddExchangeRatePairTest {
         //Then
         BankInstitution bankInRepository = BankInstitutionRepository.bankInstitutionsRepository.getBankInstitutionByName("DSK");
         assertTrue(bankInRepository.getExchangeRatePairList().containsKey(ExchangeRatePair.EUR_BGN));
-        bankInstitutionService.removeExchangeRate("DSK",ExchangeRatePair.EUR_BGN);
+        bankInstitutionService.removeExchangeRate("DSK", ExchangeRatePair.EUR_BGN);
         bankInstitutionService.removeBankInstitution("DSK");
     }
 
@@ -67,11 +67,11 @@ public class AddExchangeRatePairTest {
         //When
         bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.EUR_BGN, 0.50);
         RuntimeException exception = assertThrows(ElementAlreadyExistsException.class,
-                () -> bankInstitutionService.addNewExchangeRate("DSK",ExchangeRatePair.EUR_BGN, 0.50));
+                () -> bankInstitutionService.addNewExchangeRate("DSK", ExchangeRatePair.EUR_BGN, 0.50));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("This pair already exists!"));
-        bankInstitutionService.removeExchangeRate("DSK",ExchangeRatePair.EUR_BGN);
+        bankInstitutionService.removeExchangeRate("DSK", ExchangeRatePair.EUR_BGN);
         bankInstitutionService.removeBankInstitution("DSK");
     }
 

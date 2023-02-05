@@ -12,6 +12,10 @@ import eu.deltasource.internship.bankingsystem.repository.TransactionRepository;
 
 import java.util.Map;
 
+/**
+ * Used when the user wants to make transfer transaction
+ * Calculates exchange rate and additional fees when making transfer transaction
+ */
 public class TransferTransactionService {
 
     private void createTransferTransaction(String id, String sourceIban,

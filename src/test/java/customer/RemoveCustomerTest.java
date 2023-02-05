@@ -1,6 +1,5 @@
 package customer;
 
-import eu.deltasource.internship.bankingsystem.exception.ElementAlreadyExistsException;
 import eu.deltasource.internship.bankingsystem.exception.ElementDoesNotExistsException;
 import eu.deltasource.internship.bankingsystem.factory.CustomerFactory;
 import eu.deltasource.internship.bankingsystem.model.Customer;

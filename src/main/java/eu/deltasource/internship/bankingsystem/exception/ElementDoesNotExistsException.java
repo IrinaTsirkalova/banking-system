@@ -5,6 +5,7 @@ package eu.deltasource.internship.bankingsystem.exception;
  * Cases:
  * - If the bank account doesn't exist
  * - If the bank doesn't exist
+ * - If the customer doesn't exist
  */
 public class ElementDoesNotExistsException extends RuntimeException {
 

@@ -45,6 +45,4 @@ public class PrintCustomerTest {
         //Then
         assertTrue(exceptionElementDoesNotExists.getMessage().contentEquals("There is no such customer!"));
     }
-
-
 }

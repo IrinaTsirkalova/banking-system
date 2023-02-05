@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests:
- *  - if the user can make a deposit transaction if he has a bank account
- *  - if the user cannot make a deposit if he hasn't a bank account
- *  - if the user cannot make a deposit with amount = 0 or below 0
+ * - if the user can make a deposit transaction if he has a bank account
+ * - if the user cannot make a deposit if he hasn't a bank account
+ * - if the user cannot make a deposit with amount = 0 or below 0
  */
 public class DepositTransactionTest {
 
@@ -43,7 +43,7 @@ public class DepositTransactionTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.deposit("1","111", 5);
+        transactionService.deposit("1", "111", 5);
 
         //Then
         assertEquals(BankAccountRepository.bankAccountRepository.getBankAccountByIban("111").getAvailableAmount(), 15);
@@ -72,7 +72,7 @@ public class DepositTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(ElementDoesNotExistsException.class,
-                ()->transactionService.deposit("1","11", 5));
+                () -> transactionService.deposit("1", "11", 5));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("There is no such bank account"));
@@ -100,7 +100,7 @@ public class DepositTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                ()->transactionService.deposit("1","111", 0));
+                () -> transactionService.deposit("1", "111", 0));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount should be above 0"));
@@ -128,7 +128,7 @@ public class DepositTransactionTest {
         //When
         TransactionService transactionService = new TransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                ()->transactionService.deposit("1","111", -1));
+                () -> transactionService.deposit("1", "111", -1));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount should be above 0"));

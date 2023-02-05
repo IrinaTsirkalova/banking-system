@@ -10,7 +10,6 @@ import eu.deltasource.internship.bankingsystem.factory.BankInstitutionFactory;
 import eu.deltasource.internship.bankingsystem.factory.CustomerFactory;
 import eu.deltasource.internship.bankingsystem.model.BankInstitution;
 import eu.deltasource.internship.bankingsystem.model.Customer;
-import eu.deltasource.internship.bankingsystem.model.TransferTransaction;
 import eu.deltasource.internship.bankingsystem.repository.BankAccountRepository;
 import eu.deltasource.internship.bankingsystem.service.*;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public class TransferTransactionTest {
 
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
-        transferTransactionService.transfer("2","DSK", "RFB", "111", "123", 10);
+        transferTransactionService.transfer("2", "DSK", "RFB", "111", "123", 10);
 
         //Then
         assertEquals(BankAccountRepository.bankAccountRepository.getBankAccountByIban("123").getAvailableAmount(), 60);
@@ -93,7 +92,7 @@ public class TransferTransactionTest {
 
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
-        transferTransactionService.transfer("2","DSK", "RFB", "111", "123", 10);
+        transferTransactionService.transfer("2", "DSK", "RFB", "111", "123", 10);
 
         //Then
         assertEquals(BankAccountRepository.bankAccountRepository.getBankAccountByIban("123").getAvailableAmount(), 60);
@@ -134,7 +133,7 @@ public class TransferTransactionTest {
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
         RuntimeException exception = assertThrows(ElementDoesNotExistsException.class,
-                () -> transferTransactionService.transfer("2","DSK", "RFB", "11", "123", 10));
+                () -> transferTransactionService.transfer("2", "DSK", "RFB", "11", "123", 10));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("There is no such bank account"));
@@ -173,7 +172,7 @@ public class TransferTransactionTest {
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
         RuntimeException exception = assertThrows(ElementDoesNotExistsException.class,
-                () -> transferTransactionService.transfer("2","DSK", "RFB", "111", "12", 10));
+                () -> transferTransactionService.transfer("2", "DSK", "RFB", "111", "12", 10));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("There is no such bank account"));
@@ -212,7 +211,7 @@ public class TransferTransactionTest {
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                () -> transferTransactionService.transfer("2","DSK", "RFB", "111", "123", 100));
+                () -> transferTransactionService.transfer("2", "DSK", "RFB", "111", "123", 100));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("The amount is too high!"));
@@ -251,7 +250,7 @@ public class TransferTransactionTest {
         //When
         TransferTransactionService transferTransactionService = new TransferTransactionService();
         RuntimeException exception = assertThrows(InvalidValueInputException.class,
-                () -> transferTransactionService.transfer("2","DSK", "RFB", "111", "123", 10));
+                () -> transferTransactionService.transfer("2", "DSK", "RFB", "111", "123", 10));
 
         //Then
         assertTrue(exception.getMessage().contentEquals("Both of the account have to be current"));

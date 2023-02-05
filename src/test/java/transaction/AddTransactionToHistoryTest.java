@@ -18,9 +18,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Tests:
+ * - if when user make a deposit transaction it is added to the bank account transaction history
+ * - if when user make a withdrawal transaction it is added to the bank account transaction history
+ * - if when user make a deposit transaction it is added to the bank institution transaction history
+ * - if when user make a withdrawal transaction it is added to the bank institution transaction history
+ */
 public class AddTransactionToHistoryTest {
     @Test
-    public void should_addDepositTransaction_ToBankAccountTransactions(){
+    public void should_addDepositTransaction_ToBankAccountTransactions() {
         //Given
         CustomerFactory customerFactory = new CustomerFactory();
         BankInstitutionFactory bankInstitutionFactory = new BankInstitutionFactory();
@@ -35,11 +42,11 @@ public class AddTransactionToHistoryTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.deposit("123","111", 5);
+        transactionService.deposit("123", "111", 5);
 
         //Then
         List<Transaction> transactions = TransactionRepository.transactionRepository.getTransactionsByIban("111");
-        for(Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             assertEquals("123", transaction.getId());
         }
         bankAccountService.removeBankAccount("111");
@@ -49,7 +56,7 @@ public class AddTransactionToHistoryTest {
     }
 
     @Test
-    public void should_addWithdrawTransaction_ToBankAccountTransactions(){
+    public void should_addWithdrawTransaction_ToBankAccountTransactions() {
         //Given
         CustomerFactory customerFactory = new CustomerFactory();
         BankInstitutionFactory bankInstitutionFactory = new BankInstitutionFactory();
@@ -64,11 +71,11 @@ public class AddTransactionToHistoryTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.withdraw("123","111", 5);
+        transactionService.withdraw("123", "111", 5);
 
         //Then
         List<Transaction> transactions = TransactionRepository.transactionRepository.getTransactionsByIban("111");
-        for(Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             assertEquals("123", transaction.getId());
         }
         bankAccountService.removeBankAccount("111");
@@ -79,7 +86,7 @@ public class AddTransactionToHistoryTest {
 
 
     @Test
-    public void should_addDepositTransaction_ToBankInstitutionsTransactions(){
+    public void should_addDepositTransaction_ToBankInstitutionsTransactions() {
         //Given
         CustomerFactory customerFactory = new CustomerFactory();
         BankInstitutionFactory bankInstitutionFactory = new BankInstitutionFactory();
@@ -94,11 +101,11 @@ public class AddTransactionToHistoryTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.deposit("123","111", 5);
+        transactionService.deposit("123", "111", 5);
 
         //Then
         List<Transaction> transactions = TransactionRepository.transactionRepository.getTransactionsByBankName("DSK");
-        for(Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             assertEquals("123", transaction.getId());
         }
         bankAccountService.removeBankAccount("111");
@@ -108,7 +115,7 @@ public class AddTransactionToHistoryTest {
     }
 
     @Test
-    public void should_addWithdrawTransaction_ToBankInstitutionsTransactions(){
+    public void should_addWithdrawTransaction_ToBankInstitutionsTransactions() {
         //Given
         CustomerFactory customerFactory = new CustomerFactory();
         BankInstitutionFactory bankInstitutionFactory = new BankInstitutionFactory();
@@ -123,11 +130,11 @@ public class AddTransactionToHistoryTest {
 
         //When
         TransactionService transactionService = new TransactionService();
-        transactionService.withdraw("123","111", 5);
+        transactionService.withdraw("123", "111", 5);
 
         //Then
         List<Transaction> transactions = TransactionRepository.transactionRepository.getTransactionsByBankName("DSK");
-        for(Transaction transaction : transactions){
+        for (Transaction transaction : transactions) {
             assertEquals("123", transaction.getId());
         }
         bankAccountService.removeBankAccount("111");

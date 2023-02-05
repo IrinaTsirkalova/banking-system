@@ -6,7 +6,6 @@ import eu.deltasource.internship.bankingsystem.model.Transaction;
 import eu.deltasource.internship.bankingsystem.model.TransferTransaction;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class TransferTransactionFactory {
 
